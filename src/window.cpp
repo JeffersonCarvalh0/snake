@@ -40,7 +40,11 @@ int main() {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
-            if (event.type == sf::Event::KeyPressed) field.reseted = false;
+            if (event.type == sf::Event::KeyPressed && field.reseted) {
+                key_pressed(window, field, current_direction);
+                field.refresh(current_direction);
+                clock.restart();
+            }
         }
 
         key_pressed(window, field, current_direction);
