@@ -15,3 +15,6 @@ make main # To compile only the source, without tests
 ```
 
 You can execute the tests with `./tests` and the game with `./main`.
+
+# License
+Licensed under MIT. See [LICENSE](LICENSE) for details.
