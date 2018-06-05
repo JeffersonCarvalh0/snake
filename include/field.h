@@ -3,6 +3,7 @@
 
 # include "defs.h"
 # include "snake.h"
+# include <list>
 
 class Field {
 private:
@@ -17,6 +18,8 @@ public:
     Direction refresh(Direction direction);
     void spawnFood();
     void reset();
+    const std::list<SnakeSquare> &getSnakeBody();
+    int getScore();
     int getWidth();
     int getHeight();
     ~Field();

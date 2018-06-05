@@ -17,7 +17,6 @@ const list<SnakeSquare>& Snake::getBody() { return body; }
 void Snake::grow(int x, int y, Direction direction) {
     SnakeSquare new_tail(x, y, direction);
     body.push_front(new_tail);
-    cout << "Score: " << body.size() << '\n';
 }
 
 Direction Snake::move(Direction new_direction) {
@@ -38,8 +37,9 @@ Direction Snake::move(Direction new_direction) {
         case LEFT: if (--new_head.x < 0) new_head.x += field_width; break;
         case RIGHT: new_head.x = (new_head.x + 1) % field_width; break;
     }
+
     body.push_back(new_head);
     body.pop_front();
-    for (auto it = body.begin(); next(it) != body.end(); ++it) it->direction = next(it)->direction;
+    next(body.rbegin())->direction = body.rbegin()->direction;
     return new_direction;
 }
