@@ -39,7 +39,6 @@ public:
 
             if (!field.reseted) {
                 offset += SPEED * clock.getElapsedTime().asSeconds();
-                std::cout << offset << '\n';
                 update(); clock.restart();
             }
             update();
