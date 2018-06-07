@@ -8,10 +8,12 @@
 class Field {
 private:
     int width, height, **matrix;
-    Snake *snake;
 
 public:
+    Snake *snake;
     bool reseted;
+
+public:
     Field();
     int* operator [](int idx);
     void spawnSnake();

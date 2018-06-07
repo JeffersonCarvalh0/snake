@@ -1,8 +1,9 @@
 # include <SFML/Graphics.hpp>
 # include "defs.h"
 # include "field.h"
-# include <string>
+# include "SnakeComponent.h"
 # include <iostream>
+# include <list>
 
 class Window {
 public:
@@ -12,17 +13,16 @@ public:
     sf::Font roboto;
     sf::Texture tileset;
 
+    SnakeComponent snake;
     Field field;
     Direction current_direction;
-
-    float offset;
 
     Window() {
         window.create(sf::VideoMode(WIDTH, HEIGHT), "Snake");
         roboto.loadFromFile("../assets/fonts/RobotoMono-Bold.ttf");
         tileset.loadFromFile("../assets/textures/Snake.png");
         current_direction = RIGHT;
-        offset = 0.0;
+        snake = SnakeComponent(field.snake, &tileset);
 
         while(window.isOpen()) {
             sf::Event event;
@@ -37,17 +37,15 @@ public:
 
             keyPressed();
 
-            if (!field.reseted) {
-                offset += SPEED * clock.getElapsedTime().asSeconds();
-                update(); clock.restart();
-            }
-            update();
+            if (!field.reseted) { update(clock.getElapsedTime()); clock.restart(); }
+            update(clock.getElapsedTime());
         }
     }
 
-    void update() {
+    void update(sf::Time dt) {
         window.clear(sf::Color::Black);
         drawField();
+        snake.move(current_direction, dt.asMilliseconds());
         drawSnake();
         drawHud();
         window.display();
@@ -63,83 +61,7 @@ public:
     }
 
     void drawSnake() {
-        auto body = field.getSnakeBody();
-        for (auto it = body.begin(); it != body.end(); ++it) {
-            sf::RectangleShape body_part(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
-            body_part.setPosition(it->x * BLOCK_SIZE, it->y * BLOCK_SIZE);
-            body_part.setTexture(&tileset);
-
-            if (it->direction == UP || it->direction == DOWN)
-                body_part.move(0, offset);
-            else if (it->direction == LEFT || it->direction == RIGHT)
-                body_part.move(offset, 0);
-
-            if (it == body.begin()) {
-                switch(it->direction) {
-                    case UP: body_part.setTextureRect(sf::IntRect(2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case DOWN: body_part.setTextureRect(sf::IntRect(0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case LEFT: body_part.setTextureRect(sf::IntRect(3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case RIGHT: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                }
-            }
-
-            else if (it == prev(body.end())) {
-                switch(it->direction) {
-                    case UP: body_part.setTextureRect(sf::IntRect(2 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case DOWN: body_part.setTextureRect(sf::IntRect(0, 0, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case LEFT: body_part.setTextureRect(sf::IntRect(3 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case RIGHT: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE)); break;
-                }
-            }
-
-            else if (it->direction != prev(it)->direction) {
-                if (it->direction == UP) {
-                    switch(prev(it)->direction) {
-                        case LEFT: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        case RIGHT: body_part.setTextureRect(sf::IntRect(2 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        default: break;
-                    }
-                }
-
-                if (it->direction == DOWN) {
-                    switch(prev(it)->direction) {
-                        case LEFT: body_part.setTextureRect(sf::IntRect(0, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        case RIGHT: body_part.setTextureRect(sf::IntRect(3 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        default: break;
-                    }
-                }
-
-                if (it->direction == LEFT) {
-                    switch(prev(it)->direction) {
-                        case UP: body_part.setTextureRect(sf::IntRect(3 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        case DOWN: body_part.setTextureRect(sf::IntRect(2 * BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        default: break;
-                    }
-                }
-
-                if (it->direction == RIGHT) {
-                    switch(prev(it)->direction) {
-                        case UP: body_part.setTextureRect(sf::IntRect(0, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        case DOWN: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, 2 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                        default: break;
-                    }
-                }
-            }
-
-            else {
-                switch(it->direction) {
-                    case UP:
-                    case DOWN: body_part.setTextureRect(sf::IntRect(0, 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                    case LEFT:
-                    case RIGHT: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
-                }
-            }
-            window.draw(body_part);
-        }
-
-        if (body.back().x + offset >= body.back().x + 1 || body.back().y + offset >= body.back().y + 1) {
-            field.refresh(current_direction); offset = 0.0;
-        }
+        for (auto &body_part : snake.getBody()) window.draw(body_part.square);
     }
 
     void drawField() {

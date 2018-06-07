@@ -19,6 +19,7 @@ target_include_directories(main PRIVATE ${HEADER_DIRECTORY} ${SFML_INCLUDE_DIR})
 target_link_libraries(main ${SFML_LIBRARIES})
 
 # Tests executable
+list(REMOVE_ITEM SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/SnakeComponent.cpp)
 file(GLOB TESTS "test/*.cpp")
 add_executable(tests ${TESTS} ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(tests PRIVATE ${HEADER_DIRECTORY})
