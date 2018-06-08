@@ -2,22 +2,21 @@
 # define SNAKE_COMPONENT_H
 
 # include "defs.h"
-# include "snake.h"
 # include <SFML/Graphics.hpp>
 # include <list>
 
 class SnakeSquareComponent {
 private:
-    sf::Texture &texture;
     float x, y;
+    sf::Texture &tileset;
+    sf::RectangleShape square;
 
 public:
-    sf::RectangleShape square;
     Direction direction;
 
 public:
-    SnakeSquareComponent(float x, float y, sf::Texture &texture, Direction direction);
-    void setTextureRect(int idx_x, int idx_y);
+    SnakeSquareComponent(float x, float y, sf::Texture &tileset, Direction direction);
+    void setTextureRect(int x, int y);
     void move(float dt);
     float getX();
     float getY();
@@ -26,15 +25,14 @@ public:
 class SnakeComponent {
 private:
     std::list<SnakeSquareComponent> body;
-    Snake *snake;
-    sf::Texture *texture;
+    sf::Texture *tileset;
 
 public:
-    SnakeComponent(Snake *snake = nullptr, sf::Texture *texture = nullptr);
+    SnakeComponent(sf::Texture &tileset, int initial_size = 5);
     void move(Direction direction, float dt);
     void grow();
-    void refreshSprites();
-    std::list<SnakeSquareComponent>& getBody();
+    void refreshTiles();
+    const std::list<SnakeSquareComponent>& getBody();
 };
 
 # endif /* end of include guard: SNAKE_COMPONENT_H */

@@ -1,9 +1,7 @@
 # include <SFML/Graphics.hpp>
 # include "defs.h"
-# include "field.h"
 # include "SnakeComponent.h"
 # include <iostream>
-# include <list>
 
 class Window {
 public:
@@ -14,7 +12,6 @@ public:
     sf::Texture tileset;
 
     SnakeComponent snake;
-    Field field;
     Direction current_direction;
 
     Window() {
