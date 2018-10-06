@@ -1,8 +1,9 @@
 # include "SnakeComponent.h"
+# include <iostream>
 
 // SnakeSquareComponent
 
-SnakeSquareComponent::SnakeSquareComponent(float x, float y, sf::Texture &tileset, Direction direction):
+SnakeSquareComponent::SnakeSquareComponent(double x, double y, sf::Texture &tileset, Direction direction):
 x(x), y(y), tileset(tileset), direction(direction) {
     square.setSize(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
     square.setTexture(&tileset);
@@ -13,21 +14,23 @@ void SnakeSquareComponent::setTextureRect(int x, int y) {
     square.setTextureRect(sf::IntRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE));
 }
 
-void SnakeSquareComponent::move(float dt) {
-    float offset = SPEED * dt;
+void SnakeSquareComponent::move(double dt) {
+    double offset = SPEED * dt;
     switch(direction) {
-        case UP: square.move(0, offset); break;
-        case DOWN: square.move(0, -offset); break;
+        case UP: square.move(0, -offset); break;
+        case DOWN: square.move(0, offset); break;
         case LEFT: square.move(-offset, 0); break;
         case RIGHT: square.move(offset, 0); break;
     }
 
-    if (getX() > WIDTH - BLOCK_SIZE) square.setPosition(0, getY());
-    if (getX() < 0) square.setPosition()
+    if (getX() > WIDTH - BLOCK_SIZE) square.setPosition(getX() - WIDTH, getY());
+    if (getX() < 0) square.setPosition(WIDTH + getX(), getY());
+    if (getY() > HEIGHT - BLOCK_SIZE) square.setPosition(getX(), getY() - HEIGHT);
+    if (getY() < 0) square.setPosition(getX(), HEIGHT + getY());
 }
 
-float SnakeSquareComponent::getX() { return square.getPosition().x; }
-float SnakeSquareComponent::getY() { return square.getPosition().y; }
+double SnakeSquareComponent::getX() { return square.getPosition().x; }
+double SnakeSquareComponent::getY() { return square.getPosition().y; }
 
 // SnakeComponent
 

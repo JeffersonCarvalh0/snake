@@ -15,11 +15,11 @@ public:
     Direction direction;
 
 public:
-    SnakeSquareComponent(float x, float y, sf::Texture &tileset, Direction direction);
+    SnakeSquareComponent(double x, double y, sf::Texture &tileset, Direction direction);
     void setTextureRect(int x, int y);
-    void move(float dt);
-    float getX();
-    float getY();
+    void move(double dt);
+    double getX();
+    double getY();
 };
 
 class SnakeComponent {
@@ -29,7 +29,7 @@ private:
 
 public:
     SnakeComponent(sf::Texture &tileset, int initial_size = 5);
-    void move(Direction direction, float dt);
+    void move(Direction direction, double dt);
     void grow();
     void refreshTiles();
     const std::list<SnakeSquareComponent>& getBody();

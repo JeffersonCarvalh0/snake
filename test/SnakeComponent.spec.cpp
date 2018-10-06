@@ -11,7 +11,7 @@ SCENARIO("SnakeSquareComponent") {
     GIVEN("The snake's movement") {
         WHEN("It is moved to the right") {
             THEN("It should move to the right a distance equivalent to the time") {
-                float prevY = square.getY();
+                double prevY = square.getY();
                 square.move(250);
 
                 REQUIRE(square.getX() == Approx(SPEED * 250).margin(0.1));
@@ -21,19 +21,18 @@ SCENARIO("SnakeSquareComponent") {
 
         WHEN("It is moved up") {
             THEN("It should show up in the bottom of the screen") {
-                float prevX = square.getX();
-                float prevY = square.getY();
+                double prevX = square.getX();
                 square.direction = UP;
                 square.move(250);
 
                 REQUIRE(square.getX() == Approx(prevX).margin(0.1));
-                REQUIRE(square.getY() == Approx(SCREEN_HEIGHT - (prevY + (SPEED * 250))).margin(0.1));
+                REQUIRE(square.getY() == Approx(HEIGHT - (SPEED * 250)).margin(0.1));
             }
         }
 
         WHEN("It's moved down") {
             THEN("It should get back to the top of the screen") {
-                float prevX = square.getX();
+                double prevX = square.getX();
                 square.direction = DOWN;
                 square.move(250);
 
