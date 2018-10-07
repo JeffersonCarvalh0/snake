@@ -15,7 +15,7 @@ public:
     Field field;
     Direction current_direction;
 
-    float offset;
+    double offset;
 
     Window() {
         window.create(sf::VideoMode(WIDTH, HEIGHT), "Snake");
@@ -38,7 +38,7 @@ public:
             keyPressed();
 
             if (!field.reseted) {
-                offset += SPEED * clock.getElapsedTime().asSeconds();
+                offset += SPEED * clock.getElapsedTime().asMilliseconds();
                 update(); clock.restart();
             }
             update();
