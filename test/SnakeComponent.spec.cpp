@@ -52,3 +52,7 @@ SCENARIO("SnakeSquareComponent") {
         }
     }
 }
+
+// SCENARIO("SnakeComponent") {
+//
+// }

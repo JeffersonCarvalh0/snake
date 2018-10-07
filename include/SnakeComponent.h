@@ -7,7 +7,6 @@
 
 class SnakeSquareComponent {
 private:
-    float x, y;
     sf::Texture &tileset;
     sf::RectangleShape square;
 
