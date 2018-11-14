@@ -15,14 +15,11 @@ public:
     Field field;
     Direction current_direction;
 
-    double offset;
-
     Window() {
         window.create(sf::VideoMode(WIDTH, HEIGHT), "Snake");
         roboto.loadFromFile("../assets/fonts/RobotoMono-Bold.ttf");
         tileset.loadFromFile("../assets/textures/Snake.png");
         current_direction = RIGHT;
-        offset = 0.0;
 
         while(window.isOpen()) {
             sf::Event event;
@@ -37,10 +34,11 @@ public:
 
             keyPressed();
 
-            if (!field.reseted) {
-                offset += SPEED * clock.getElapsedTime().asMilliseconds();
-                update(); clock.restart();
+            if (!field.reseted && clock.getElapsedTime().asMilliseconds() >= SPEED) {
+                field.refresh(current_direction);
+                clock.restart();
             }
+
             update();
         }
     }
@@ -68,11 +66,6 @@ public:
             sf::RectangleShape body_part(sf::Vector2f(BLOCK_SIZE, BLOCK_SIZE));
             body_part.setPosition(it->x * BLOCK_SIZE, it->y * BLOCK_SIZE);
             body_part.setTexture(&tileset);
-
-            if (it->direction == UP || it->direction == DOWN)
-                body_part.move(0, offset);
-            else if (it->direction == LEFT || it->direction == RIGHT)
-                body_part.move(offset, 0);
 
             if (it == body.begin()) {
                 switch(it->direction) {
@@ -134,11 +127,8 @@ public:
                     case RIGHT: body_part.setTextureRect(sf::IntRect(BLOCK_SIZE, 3 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)); break;
                 }
             }
-            window.draw(body_part);
-        }
 
-        if (body.back().x + offset >= body.back().x + 1 || body.back().y + offset >= body.back().y + 1) {
-            field.refresh(current_direction); offset = 0.0;
+            window.draw(body_part);
         }
     }
 
