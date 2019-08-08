@@ -19,7 +19,7 @@ You can execute the tests with `./tests` and the game with `./main`.
 # Built with
 * [SFML](https://www.sfml-dev.org/index.php)
 
-Textures were taken from [eugeneloza's snake game](https://github.com/eugeneloza/SnakeGame).
+Textures were taken from [eugeneloza's snake game](https://github.com/eugeneloza/SnakeGame). <br>
 Sounds were taken from http://www.downloadfreesound.com/8-bit-sound-effects/
 
 # License
