@@ -1,6 +1,8 @@
 # ifndef SNAKE_H
 # define SNAKE_H
 
+# include <SFML/Audio.hpp>
+
 # include "defs.h"
 # include <list>
 
@@ -13,6 +15,8 @@ struct SnakeSquare {
 class Snake {
 private:
     int initial_size, field_width, field_height;
+    sf::SoundBuffer scoreBuffer;
+    sf::Sound scoreSound;
     std::list<SnakeSquare> body;
 
 public:

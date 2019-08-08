@@ -10,6 +10,10 @@ Field::Field() {
     snake = nullptr;
     reseted = true;
 
+    
+    looseBuffer.loadFromFile("../assets/sounds/loose.wav");
+    looseSound.setBuffer(looseBuffer);
+
     matrix = new int*[height];
     int *p = new int[width*height];
     for (int i = 0; i < height; ++i) matrix[i] = p + (i * width);
@@ -38,6 +42,7 @@ Direction Field::refresh(Direction direction) {
         snake->grow(prev_tail_x, prev_tail_y, prev_tail_direction);
         spawnFood();
     } else if (matrix[new_y][new_x] == 1) {
+        looseSound.play();
         cout << "You died. Looser.\n\n";
         reset();
         return RIGHT;

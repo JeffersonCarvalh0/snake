@@ -8,6 +8,8 @@ x(x), y(y), direction(direction) {}
 
 Snake::Snake(int field_width, int field_height, int initial_size):
 field_width(field_width), field_height(field_height) {
+    scoreBuffer.loadFromFile("../assets/sounds/score.wav");
+    scoreSound.setBuffer(scoreBuffer);
     for (int i = 0; i < initial_size; ++i)
         body.push_back(SnakeSquare(i, 0, RIGHT));
 }
@@ -15,6 +17,7 @@ field_width(field_width), field_height(field_height) {
 const list<SnakeSquare>& Snake::getBody() { return body; }
 
 void Snake::grow(int x, int y, Direction direction) {
+    scoreSound.play();
     SnakeSquare new_tail(x, y, direction);
     body.push_front(new_tail);
 }
